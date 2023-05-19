@@ -1,41 +1,36 @@
 name: LadangPetani
 
 on:
+
   push:
     branches:
       - master
-
+      
   schedule:
-    - cron: '0 * * * *'
+  - cron: '0 7,0,11,18 * * *'
 
 jobs:
   auto_commit:
     runs-on: ubuntu-latest
     steps:
-      - name: global directory
+      - name : global directory
         run: git config --global --add safe.directory /github/workspace
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3 
         with:
-          persist-credentials: false
-          fetch-depth: 1
+         persist-credentials: false
+         fetch-depth: 1
 
       - name: Modify last update
         run: |
-          d=$(date '+%Y-%m-%dT%H:%M:%SZ')
+          d=`date '+%Y-%m-%dT%H:%M:%SZ'`
           echo $d > LAST_UPDATED
-
-      - name: Determine random commit count
-        id: random_commit_count
-        run: |
-          commit_count=$((RANDOM % 5 + 1))  # Jumlah acak antara 1 dan 5
-          echo "::set-output name=commit_count::$commit_count"
-
+          
       - name: Commit changes
         run: |
           git config --local user.email "adamibnu012@gmail.com"
           git config --local user.name "Adamibnualfatahh"
           git add -A
-
+          
           arr[0]="feat: 😂 auto commit"
           arr[1]="feat: 😱 auto commit"
           arr[2]="feat: 👿 auto commit"
@@ -44,12 +39,11 @@ jobs:
           arr[5]="feat: 🙈 auto commit"
           arr[6]="feat: 🐐 auto commit"
           arr[7]="feat: 🚀 auto commit"
-
-          for ((i=0; i<${{ steps.random_commit_count.outputs.commit_count }}; i++)); do
-            rand=$((RANDOM % 8))
-            git commit -m "${arr[$rand]}"
-          done
-
+          
+          rand=$[$RANDOM % ${#arr[@]}]
+          
+          git commit -m "${arr[$rand]}"
+          
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
