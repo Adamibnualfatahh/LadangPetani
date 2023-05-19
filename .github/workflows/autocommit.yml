@@ -16,41 +16,29 @@ jobs:
         run: git config --global --add safe.directory /github/workspace
       - uses: actions/checkout@v3 
         with:
-          persist-credentials: false
-          fetch-depth: 1
+         persist-credentials: false
+         fetch-depth: 1
 
       - name: Modify last update
         run: |
           d=`date '+%Y-%m-%dT%H:%M:%SZ'`
           echo $d > LAST_UPDATED
-
+          
       - name: Commit changes
         run: |
           git config --local user.email "adamibnu012@gmail.com"
           git config --local user.name "Adamibnualfatahh"
           git add -A
 
-          node -e '
-          const getRandomInt = (min, max) => {
-            return Math.floor(Math.random() * (max - min + 1) + min);
-          };
+          commitCount=$(shuf -i 1-20 -n 1)
+          emojis=("😂" "😱" "👿" "💩" "🙏" "🙈" "🐐" "🚀")
 
-          const emojis = ["😂", "😱", "👿", "💩", "🙏", "🙈", "🐐", "🚀"];
-
-          const commitCount = getRandomInt(1, 20);
-
-          for (let i = 0; i < commitCount; i++) {
-            const randomIndex = getRandomInt(0, emojis.length - 1);
-            const emoji = emojis[randomIndex];
-            const commitMessage = `feat: ${emoji} auto commit`;
-
-            console.log(`Committing: ${commitMessage}`);
-            console.log(`Commit ${i + 1} of ${commitCount}`);
-
-            require("child_process").execSync(`git commit -m "${commitMessage}"`);
-          }
-          '
-
+          for ((i=0; i<$commitCount; i++)); do
+            rand=$((RANDOM % ${#emojis[@]}))
+            emoji=${emojis[$rand]}
+            git commit -m "feat: $emoji auto commit"
+          done
+          
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
