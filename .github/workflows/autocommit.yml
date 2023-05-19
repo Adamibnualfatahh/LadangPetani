@@ -6,7 +6,7 @@ on:
       - master
 
   schedule:
-    - cron: '0 7,0,11,18 * * *'
+    - cron: '0 * * * *'
 
 jobs:
   auto_commit:
@@ -35,6 +35,15 @@ jobs:
           git config --local user.email "adamibnu012@gmail.com"
           git config --local user.name "Adamibnualfatahh"
           git add -A
+
+          arr[0]="feat: 😂 auto commit"
+          arr[1]="feat: 😱 auto commit"
+          arr[2]="feat: 👿 auto commit"
+          arr[3]="feat: 💩 auto commit"
+          arr[4]="feat: 🙏 auto commit"
+          arr[5]="feat: 🙈 auto commit"
+          arr[6]="feat: 🐐 auto commit"
+          arr[7]="feat: 🚀 auto commit"
 
           for ((i=0; i<${{ steps.random_commit_count.outputs.commit_count }}; i++)); do
             rand=$((RANDOM % 8))
