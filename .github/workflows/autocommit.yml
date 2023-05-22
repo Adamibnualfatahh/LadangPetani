@@ -1,6 +1,7 @@
 name: LadangPetani
 
 on:
+
   push:
     branches:
       - master
@@ -12,7 +13,7 @@ jobs:
   auto_commit:
     runs-on: ubuntu-latest
     steps:
-      - name: global directory
+      - name : global directory
         run: git config --global --add safe.directory /github/workspace
       - uses: actions/checkout@v3 
         with:
@@ -21,28 +22,28 @@ jobs:
 
       - name: Modify last update
         run: |
-          d=$(date '+%Y-%m-%dT%H:%M:%SZ')
+          d=`date '+%Y-%m-%dT%H:%M:%SZ'`
           echo $d > LAST_UPDATED
-
-      - name: Generate random commit count
-        id: random_commit_count
-        run: echo "::set-output name=count::$(shuf -i 1-20 -n 1)"
-
+          
       - name: Commit changes
         run: |
           git config --local user.email "adamibnu012@gmail.com"
           git config --local user.name "Adamibnualfatahh"
           git add -A
-
-          commitCount=${{ steps.random_commit_count.outputs.count }}
-          emojis=("😂" "😱" "👿" "💩" "🙏" "🙈" "🐐" "🚀")
-
-          for ((i=0; i<$commitCount; i++)); do
-            rand=$((RANDOM % ${#emojis[@]}))
-            emoji=${emojis[$rand]}
-            git commit -m "feat: $emoji auto commit"
-          done
-
+          
+          arr[0]="feat: 😂 auto commit"
+          arr[1]="feat: 😱 auto commit"
+          arr[2]="feat: 👿 auto commit"
+          arr[3]="feat: 💩 auto commit"
+          arr[4]="feat: 🙏 auto commit"
+          arr[5]="feat: 🙈 auto commit"
+          arr[6]="feat: 🐐 auto commit"
+          arr[7]="feat: 🚀 auto commit"
+          
+          rand=$[$RANDOM % ${#arr[@]}]
+          
+          git commit -m "${arr[$rand]}"
+          
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
